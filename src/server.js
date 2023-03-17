@@ -10,6 +10,7 @@ import {
 } from "./errorHandlers.js";
 import productsRouter from "./api/products/index.js";
 import reviwsRouter from "./api/reviews/index.js";
+import usersRouter from "./api/users/index.js";
 
 const server = Express();
 const port = process.env.PORT || 3001;
@@ -19,6 +20,7 @@ server.use(Express.json());
 
 server.use("/products", productsRouter);
 server.use("/reviews", reviwsRouter);
+server.use("/users", usersRouter);
 
 server.use(badRequestHandler);
 server.use(unauthorizedHandler);
