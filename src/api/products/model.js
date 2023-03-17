@@ -9,14 +9,30 @@ const productSchema = new Schema(
     imageUrl: { type: String, required: true },
     price: { type: Number, required: true },
     category: { type: String, required: true },
-    reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+    reviews: [
+      {
+        user: { type: Schema.Types.ObjectId, ref: "User" },
+        comment: { type: String, reqired: true },
+        rate: {
+          type: Number,
+          reqired: true,
+          min: [0, "Do you think a review can be a negative number? :("],
+          max: [
+            5,
+            "We're happy to see that you love this product, but unfortunately, the max value for a review is 5! :)",
+          ],
+        },
+        createdAt: { type: Date, reqired: true },
+        updatedAt: { type: Date, reqired: true },
+      },
+    ],
   },
   { timestamps: true }
 );
 
 const populateOptions = {
-  path: "reviews",
-  select: "user comment rate",
+  path: "reviews.user",
+  select: "name surname",
 };
 
 // productS
