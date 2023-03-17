@@ -67,7 +67,14 @@ reviewsRouter.put("/:reviewId", async (req, res, next) => {
 
 reviewsRouter.delete("/:reviewId", async (req, res, next) => {
   try {
-    res.status(204).send();
+    const deletedReview = await reviewsModel.findByIdAndDelete(
+      req.params.reviewId
+    );
+    if (deletedReview) res.status(204).send();
+    else
+      next(
+        createHttpError(404, `Review with id ${req.params.reviewId} not found!`)
+      );
   } catch (error) {
     next(error);
   }
