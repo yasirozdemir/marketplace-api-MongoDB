@@ -9,14 +9,14 @@ const productSchema = new Schema(
     imageUrl: { type: String, required: true },
     price: { type: Number, required: true },
     category: { type: String, required: true },
-    // reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+    reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   },
   { timestamps: true }
 );
 
 const populateOptions = {
   path: "reviews",
-  // select will be added later
+  select: "user comment rate",
 };
 
 // productS
@@ -29,8 +29,8 @@ productSchema.static(
     )
       .sort(mongoQuery.options.sort)
       .skip(mongoQuery.options.skip)
-      .limit(mongoQuery.options.limit);
-    // .populate(populateOptions);
+      .limit(mongoQuery.options.limit)
+      .populate(populateOptions);
     const totalProducts = await this.countDocuments(mongoQuery.criteria);
     return { products, totalProducts };
   }

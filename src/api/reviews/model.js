@@ -3,7 +3,7 @@ const { Schema, model } = mongoose;
 
 const reviewSchema = new Schema(
   {
-    // user can be added as an extra
+    user: { type: Schema.Types.ObjectId, ref: "User" },
     comment: { type: String, reqired: true },
     rate: {
       type: Number,
@@ -17,5 +17,30 @@ const reviewSchema = new Schema(
   },
   { timestamps: true }
 );
+
+const populateOptions = {
+  path: "user",
+  select: "name surname",
+};
+
+// reviewS
+reviewSchema.static("getReviewsWithUserDetails", async function (mongoQuery) {
+  const reviews = await this.find(
+    mongoQuery.criteria,
+    mongoQuery.options.fields
+  )
+    .sort(mongoQuery.options.sort)
+    .skip(mongoQuery.options.skip)
+    .limit(mongoQuery.options.limit)
+    .populate(populateOptions);
+  const totalReviews = await this.countDocuments(mongoQuery.criteria);
+  return { reviews, totalReviews };
+});
+
+// product
+reviewSchema.static("getReviewWithUserDetails", async function (id) {
+  const review = await this.findById(id).populate(populateOptions);
+  return review;
+});
 
 export default model("Review", reviewSchema);
