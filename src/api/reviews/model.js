@@ -37,7 +37,7 @@ reviewSchema.static("getReviewsWithUserDetails", async function (mongoQuery) {
   return { reviews, totalReviews };
 });
 
-// product
+// review
 reviewSchema.static("getReviewWithUserDetails", async function (id) {
   const review = await this.findById(id).populate(populateOptions);
   return review;
