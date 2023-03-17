@@ -8,8 +8,8 @@ const productSchema = new Schema(
     brand: { type: String, required: true },
     imageUrl: { type: String, required: true },
     price: { type: Number, required: true },
-    category: { type: Number, required: true },
-    reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+    category: { type: String, required: true },
+    // reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   },
   { timestamps: true }
 );
@@ -29,10 +29,10 @@ productSchema.static(
     )
       .sort(mongoQuery.options.sort)
       .skip(mongoQuery.options.skip)
-      .limit(mongoQuery.options.limit)
-      .populate(populateOptions);
-    const totalReviews = await this.countDocuments(mongoQuery.criteria);
-    return { products, totalReviews };
+      .limit(mongoQuery.options.limit);
+    // .populate(populateOptions);
+    const totalProducts = await this.countDocuments(mongoQuery.criteria);
+    return { products, totalProducts };
   }
 );
 
