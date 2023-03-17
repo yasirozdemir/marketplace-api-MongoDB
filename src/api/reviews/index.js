@@ -1,10 +1,11 @@
 import Express from "express";
 import reviewsModel from "./model.js";
 import q2m from "query-to-mongo";
+import createHttpError from "http-errors";
 
-const reviwsRouter = Express.Router();
+const reviewsRouter = Express.Router();
 
-reviwsRouter.post("/", async (req, res, next) => {
+reviewsRouter.post("/", async (req, res, next) => {
   try {
     const newReview = new reviewsModel(req.body);
     const { _id } = await newReview.save();
@@ -18,7 +19,7 @@ reviwsRouter.post("/", async (req, res, next) => {
   }
 });
 
-reviwsRouter.get("/", async (req, res, next) => {
+reviewsRouter.get("/", async (req, res, next) => {
   try {
     const queryToMongo = q2m(req.query);
     const { reviews, totalReviews } =
@@ -29,26 +30,42 @@ reviwsRouter.get("/", async (req, res, next) => {
   }
 });
 
-reviwsRouter.get("/:reviewId", async (req, res, next) => {
+reviewsRouter.get("/:reviewId", async (req, res, next) => {
   try {
     const review = await reviewsModel.getReviewWithUserDetails(
       req.params.reviewId
     );
-    res.send(review);
+    if (review) res.send(review);
+    else
+      next(
+        createHttpError(404, `Review with id ${req.params.reviewId} not found!`)
+      );
   } catch (error) {
     next(error);
   }
 });
 
-reviwsRouter.put("/:reviewId", async (req, res, next) => {
+reviewsRouter.put("/:reviewId", async (req, res, next) => {
   try {
-    res.send();
+    const updatedReview = await reviewsModel.findByIdAndUpdate(
+      req.params.reviewId,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    if (updatedReview) res.send(updatedReview);
+    else
+      next(
+        createHttpError(404, `Review with id ${req.params.reviewId} not found!`)
+      );
   } catch (error) {
     next(error);
   }
 });
 
-reviwsRouter.delete("/:reviewId", async (req, res, next) => {
+reviewsRouter.delete("/:reviewId", async (req, res, next) => {
   try {
     res.status(204).send();
   } catch (error) {
@@ -56,4 +73,4 @@ reviwsRouter.delete("/:reviewId", async (req, res, next) => {
   }
 });
 
-export default reviwsRouter;
+export default reviewsRouter;

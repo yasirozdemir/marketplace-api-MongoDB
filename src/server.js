@@ -9,7 +9,7 @@ import {
   genericErrorHandler,
 } from "./errorHandlers.js";
 import productsRouter from "./api/products/index.js";
-import reviwsRouter from "./api/reviews/index.js";
+import reviewsRouter from "./api/reviews/index.js";
 import usersRouter from "./api/users/index.js";
 
 const server = Express();
@@ -19,7 +19,7 @@ server.use(cors());
 server.use(Express.json());
 
 server.use("/products", productsRouter);
-server.use("/reviews", reviwsRouter);
+server.use("/reviews", reviewsRouter);
 server.use("/users", usersRouter);
 
 server.use(badRequestHandler);
