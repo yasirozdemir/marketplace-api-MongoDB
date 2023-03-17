@@ -38,28 +38,4 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-// usersRouter.get("/:userId", async (req, res, next) => {
-//   try {
-//     res.send();
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-// usersRouter.put("/:userId", async (req, res, next) => {
-//   try {
-//     res.send();
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-// usersRouter.delete("/:userId", async (req, res, next) => {
-//   try {
-//     res.status(204).send();
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
 export default usersRouter;
