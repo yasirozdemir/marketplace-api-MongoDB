@@ -8,12 +8,17 @@ import {
   notFoundHandler,
   genericErrorHandler,
 } from "./errorHandlers.js";
+import productsRouter from "./api/products/index.js";
+import reviwsRouter from "./api/reviews/index.js";
 
 const server = Express();
 const port = process.env.PORT || 3001;
 
 server.use(cors());
 server.use(Express.json());
+
+server.use("/products", productsRouter);
+server.use("/reviews", reviwsRouter);
 
 server.use(badRequestHandler);
 server.use(unauthorizedHandler);
