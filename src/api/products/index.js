@@ -23,7 +23,7 @@ productsRouter.get("/", async (req, res, next) => {
     const queryToMongo = q2m(req.query);
     const { products, totalProducts } =
       await ProductsModel.getProductsWithReviewDetails(queryToMongo);
-    res.send(products);
+    res.send({ totalProducts, products });
   } catch (error) {
     next(error);
   }
@@ -31,7 +31,17 @@ productsRouter.get("/", async (req, res, next) => {
 
 productsRouter.get("/:productId", async (req, res, next) => {
   try {
-    res.send();
+    const product = await ProductsModel.getProductWithReviewDetails(
+      req.params.productId
+    );
+    if (product) res.send(product);
+    else
+      next(
+        createHttpError(
+          404,
+          `Product with id ${req.params.productId} not found!`
+        )
+      );
   } catch (error) {
     next(error);
   }
@@ -39,7 +49,19 @@ productsRouter.get("/:productId", async (req, res, next) => {
 
 productsRouter.put("/:productId", async (req, res, next) => {
   try {
-    res.send();
+    const updatedProduct = await ProductsModel.findByIdAndUpdate(
+      req.params.productId,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (updatedProduct) res.send(updatedProduct);
+    else
+      next(
+        createHttpError(
+          404,
+          `Product with id ${req.params.productId} not found!`
+        )
+      );
   } catch (error) {
     next(error);
   }
@@ -47,7 +69,17 @@ productsRouter.put("/:productId", async (req, res, next) => {
 
 productsRouter.delete("/:productId", async (req, res, next) => {
   try {
-    res.status(204).send();
+    const deletedProduct = await ProductsModel.findByIdAndDelete(
+      req.params.productId
+    );
+    if (deletedProduct) res.status(204).send();
+    else
+      next(
+        createHttpError(
+          404,
+          `Product with id ${req.params.productId} not found!`
+        )
+      );
   } catch (error) {
     next(error);
   }
